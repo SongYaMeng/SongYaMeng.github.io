@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-08-22T02:29:07.940Z</updated>
+  <updated>2024-08-22T02:55:02.880Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,8 +21,16 @@
     <link href="http://example.com/2024/08/22/addressable/"/>
     <id>http://example.com/2024/08/22/addressable/</id>
     <published>2024-08-22T02:29:07.000Z</published>
-    <updated>2024-08-22T02:29:07.940Z</updated>
+    <updated>2024-08-22T02:55:02.880Z</updated>
     
+    <content type="html"><![CDATA[<p>做一个简单的使用记录</p><h3 id="Addressable基本API"><a href="#Addressable基本API" class="headerlink" title="Addressable基本API"></a>Addressable基本API</h3>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;做一个简单的使用记录&lt;/p&gt;
+&lt;h3 id=&quot;Addressable基本API&quot;&gt;&lt;a href=&quot;#Addressable基本API&quot; class=&quot;headerlink&quot; title=&quot;Addressable基本API&quot;&gt;&lt;/a&gt;Addressable基本API&lt;/h3</summary>
+      
     
     
     
