@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-08-22T02:55:02.880Z</updated>
+  <updated>2024-08-22T08:52:58.289Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,19 +17,41 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>curveMap</title>
+    <link href="http://example.com/2024/08/22/curveMap/"/>
+    <id>http://example.com/2024/08/22/curveMap/</id>
+    <published>2024-08-22T08:27:11.000Z</published>
+    <updated>2024-08-22T08:52:58.289Z</updated>
+    
+    <content type="html"><![CDATA[<p>实现曲面地图效果</p><center><img src="curveMap.gif" width = "" height = ""></center>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;实现曲面地图效果&lt;/p&gt;
+&lt;center&gt;&lt;img src=&quot;curveMap.gif&quot; width = &quot;&quot; height = &quot;&quot;&gt;&lt;/center&gt;
+</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>addressable</title>
     <link href="http://example.com/2024/08/22/addressable/"/>
     <id>http://example.com/2024/08/22/addressable/</id>
     <published>2024-08-22T02:29:07.000Z</published>
-    <updated>2024-08-22T02:55:02.880Z</updated>
+    <updated>2024-08-22T08:26:33.550Z</updated>
     
-    <content type="html"><![CDATA[<p>做一个简单的使用记录</p><h3 id="Addressable基本API"><a href="#Addressable基本API" class="headerlink" title="Addressable基本API"></a>Addressable基本API</h3>]]></content>
+    <content type="html"><![CDATA[<p>做一个简单的使用记录</p><h3 id="Addressable加载和卸载"><a href="#Addressable加载和卸载" class="headerlink" title="Addressable加载和卸载"></a>Addressable加载和卸载</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Addressables.LoadAssetAsync&lt;T&gt;(key);</span><br></pre></td></tr></table></figure>]]></content>
     
     
       
       
     <summary type="html">&lt;p&gt;做一个简单的使用记录&lt;/p&gt;
-&lt;h3 id=&quot;Addressable基本API&quot;&gt;&lt;a href=&quot;#Addressable基本API&quot; class=&quot;headerlink&quot; title=&quot;Addressable基本API&quot;&gt;&lt;/a&gt;Addressable基本API&lt;/h3</summary>
+&lt;h3 id=&quot;Addressable加载和卸载&quot;&gt;&lt;a href=&quot;#Addressable加载和卸载&quot; class=&quot;headerlink&quot; title=&quot;Addressable加载和卸载&quot;&gt;&lt;/a&gt;Addressable加载和卸载&lt;/h3</summary>
       
     
     

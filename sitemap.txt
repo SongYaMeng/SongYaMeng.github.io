@@ -1,3 +1,4 @@
+http://example.com/2024/08/22/curveMap/
 http://example.com/2024/08/22/addressable/
 http://example.com/2024/08/07/instance/
 http://example.com/2024/08/06/hello-world/
