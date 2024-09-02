@@ -1,3 +1,4 @@
+http://example.com/2024/08/30/sceneManager/
 http://example.com/2024/08/30/ugui/
 http://example.com/2024/08/22/addressable/
 http://example.com/2024/08/22/curveMap/
