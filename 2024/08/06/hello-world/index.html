@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    
+    <meta charset="UTF-8">
+    <title>构建blog - 我勒博客</title>
+    <link rel="shortcut icon" href="/static/img/icon.png">
+    <link rel="icon" href="/static/img/icon.png" sizes="192x192"/>
+    
+<link rel="stylesheet" href="/static/kico.css">
+<link rel="stylesheet" href="/static/hingle.css">
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta property="og:site_name" content="我勒博客">
+    <meta property="og:title" content="构建blog"/>
+    
+    <style>body:before{ content: ''; background-image: url(https://api.paugram.com/wallpaper?source=sm) }</style>
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我勒博客" type="application/atom+xml">
+</head>
+
+  <body>
+    <header>
+    <div class="head-title">
+        <h4>我勒博客</h4>
+    </div>
+    <div class="head-action">
+        <div class="toggle-btn"></div>
+        <div class="light-btn"></div>
+        <div class="search-btn"></div>
+    </div>
+    <form class="head-search" method="post">
+        <input type="text" name="s" placeholder="搜索什么？">
+    </form>
+    <nav class="head-menu">
+        <a href="/">首页</a>
+        <div class="has-child">
+            <a href>分类</a>
+            <div class="sub-menu">
+                <a class="category-link" href="/categories/Hexo/">Hexo</a><a class="category-link" href="/categories/unity/">unity</a><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+            </div>
+        </div>
+        
+            <a href="/about">关于我</a>
+        
+    </nav>
+</header>
+
+    <main>
+    <div class="wrap min">
+        <section class="page-title">
+            <h2>构建blog</h2>
+        </section>
+        <article class="page-content">
+        
+            <blockquote>这篇文章上次修改于 241 天前，可能其部分内容已经发生变化，如有疑问可询问作者。</blockquote>
+        
+            <p>构建 Hexo Blog 过程</p>
+<h2 id="构建环境"><a href="#构建环境" class="headerlink" title="构建环境"></a>构建环境</h2><ol>
+<li>安装<a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn">Node.js</a></li>
+<li>安装<a target="_blank" rel="noopener" href="https://git-scm.com/">Git</a></li>
+<li>安装Hexo<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install</span><br><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="初始化工程"><a href="#初始化工程" class="headerlink" title="初始化工程"></a>初始化工程</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ <span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="添加文章"><a href="#添加文章" class="headerlink" title="添加文章"></a>添加文章</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new [layout] &lt;title&gt;  //layout 默认提供draft page post 默认使用配置在 _config.yml</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="构建项目"><a href="#构建项目" class="headerlink" title="构建项目"></a>构建项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建本地服务器-浏览效果-localhost"><a href="#创建本地服务器-浏览效果-localhost" class="headerlink" title="创建本地服务器 浏览效果 localhost"></a>创建本地服务器 浏览效果 <a target="_blank" rel="noopener" href="http://localhost:4000/">localhost</a></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<h3 id="隐藏文章"><a href="#隐藏文章" class="headerlink" title="隐藏文章"></a>隐藏文章</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-hide-posts --save   //并在文章的头 添加 hidden: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h3><p>在 _config.yml 里添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo: github    //仓库地址 https开头的</span><br><span class="line">  branch: main    //分支</span><br><span class="line">  执行命令</span><br><span class="line">$  hexo clean</span><br><span class="line">$  hexo deploy</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="使用简单的皮肤brewski"><a href="#使用简单的皮肤brewski" class="headerlink" title="使用简单的皮肤brewski"></a>使用简单的皮肤<a target="_blank" rel="noopener" href="https://github.com/tiaanduplessis/hexo-theme-brewski">brewski</a></h3><p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">官方文档</a></p>
+
+        </article>
+    </div>
+</main>
+
+    <footer>
+    <div class="buttons">
+        <button class="to-top" href="#"></button>
+    </div>
+    <div class="wrap min">
+        <section class="widget">
+            <div class="row">
+                <div class="col-m-4">
+                    <h3 class="title-recent">最新文章：</h3>
+                    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/06/guidefunction/">guidefunction</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/04/touch/">touch</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/02/48.16fixed/">48.16 fixed</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/sceneManager/">sceneManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/ugui/">ugui</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/22/curveMap/">curveMap</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-date">时光机：</h3>
+                    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">August 2024</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-tags">标签云：</h3>
+                    <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 10px;">渲染</a>
+                </div>
+            </div>
+        </section>
+        <section class="sub-footer">
+            <p>© 2025 <a href="/">我勒博客</a>. All Rights Reserved. Theme By <a href="https://github.com/Dreamer-Paul/Hingle" target="_blank" rel="nofollow">Hingle</a>.</p>
+        </section>
+    </div>
+</footer>
+
+
+<script src="/static/kico.js"></script>
+<script src="/static/hingle.js"></script>
+
+
+<script>var hingle = new Paul_Hingle({"copyright":true,"night":true});</script>
+
+  </body>
+</html>

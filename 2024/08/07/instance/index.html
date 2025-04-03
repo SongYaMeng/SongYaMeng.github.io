@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    
+    <meta charset="UTF-8">
+    <title>unity的合批 - 我勒博客</title>
+    <link rel="shortcut icon" href="/static/img/icon.png">
+    <link rel="icon" href="/static/img/icon.png" sizes="192x192"/>
+    
+<link rel="stylesheet" href="/static/kico.css">
+<link rel="stylesheet" href="/static/hingle.css">
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta property="og:site_name" content="我勒博客">
+    <meta property="og:title" content="unity的合批"/>
+    
+    <style>body:before{ content: ''; background-image: url(https://api.paugram.com/wallpaper?source=sm) }</style>
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我勒博客" type="application/atom+xml">
+</head>
+
+  <body>
+    <header>
+    <div class="head-title">
+        <h4>我勒博客</h4>
+    </div>
+    <div class="head-action">
+        <div class="toggle-btn"></div>
+        <div class="light-btn"></div>
+        <div class="search-btn"></div>
+    </div>
+    <form class="head-search" method="post">
+        <input type="text" name="s" placeholder="搜索什么？">
+    </form>
+    <nav class="head-menu">
+        <a href="/">首页</a>
+        <div class="has-child">
+            <a href>分类</a>
+            <div class="sub-menu">
+                <a class="category-link" href="/categories/Hexo/">Hexo</a><a class="category-link" href="/categories/unity/">unity</a><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+            </div>
+        </div>
+        
+            <a href="/about">关于我</a>
+        
+    </nav>
+</header>
+
+    <main>
+    <div class="wrap min">
+        <section class="page-title">
+            <h2>unity的合批</h2>
+        </section>
+        <article class="page-content">
+        
+            <blockquote>这篇文章上次修改于 240 天前，可能其部分内容已经发生变化，如有疑问可询问作者。</blockquote>
+        
+            <p>unity的合批有很多类型  <em>静态</em> , <em>动态</em> , <em>GpuInstance</em> , <em>SrpBatch</em></p>
+<p>众所周知,绘制一个网格 需要 <span style="color: red;">网格的顶点(Vectex),网格顶点组成三角面片的排序信息(Index)</span>unity 在绘制一个物体的时候 物体需要提交自己的状态(使用什么纹理,网格,材质等) 被叫做SetPass的消耗在之后才是真正进行绘制的该物体的操作（DrawCall）</p>
+<h2 id="静态批处理"><a href="#静态批处理" class="headerlink" title="静态批处理"></a>静态批处理</h2><p>原理: 对所有使用<span style="color: red;">相同材质</span>的网格进行合并 这样上交网格的Vectex和Index的时候,只需要上交一次,减少了网格上交时的SetPass的消耗</p>
+<p>注意点: 需要绘制的物体 在合批的网格物体的顺序如果是连续的(Vectex Index连续)，那么它们的可以合并一个DrawCall的，所以理论上<span style="color: red;">静态批处理很难有效的降低DrawCall 的消耗</span></p>
+<p>缺点: 标记为静态的物体需要开启读写，占用一倍的内存</p>
+<p>拓展：可以通过c#的api 在运行中进行静态合批,比如房间的门 在打开的瞬间解除静态合批，打开后在加入静态合批 也是不错的策略</p>
+<h2 id="动态批处理"><a href="#动态批处理" class="headerlink" title="动态批处理"></a>动态批处理</h2><p>原理: 运行过程中对满足条件的网格合并成一个（Vectex和Index），后上交网格 条件是：<br><span style="color: red;">1.相同材质</span><br><span style="color: red;">2.Transform的Scale不能镜像</span><br><span style="color: red;">3.顶点属性数量不能大于900</span><br><span style="color: red;">4.单Pass</span><br><span style="color: red;">5.网格实例应该引用相同的光照纹理文件</span></p>
+<p>缺点: 动态合批对应性能消耗很大，需要实时合并网格</p>
+<h3 id="常量缓冲区（ConstantBuffer）"><a href="#常量缓冲区（ConstantBuffer）" class="headerlink" title="常量缓冲区（ConstantBuffer）"></a>常量缓冲区（ConstantBuffer）</h3><p>先了解URP中的 Shader的 常量缓冲区CBUFFER在来谈 SRP Batcher是合理的</p>
+<p>概念:用于cpu向gpu中的shader程序提供单帧的常量数据,常量缓冲区是GPU资源 可以理解为Gpu的显存<br><span style="color: red;">每帧更新，且每次更新提交的数据都是整个CBuffer</span>， 同时，常量的概念只是在单帧内保持不变，整个游戏运行过程中是允许修改这些buffer的。<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lanyelinxiang/p/16792845.html">goto</a></p>
+<h2 id="SRP-Batcher"><a href="#SRP-Batcher" class="headerlink" title="SRP Batcher"></a>SRP Batcher</h2><p>原理：cpu 在进行SetPass 的时候 实际上需要创建CBuffer-上传CBuffer,但是在Srp的设计中所有的材质球占有了固定位置的CBuffer，如果这个材质球不变，那么不需要对目标的CBuffer进行创建-上传的操作，实际上优化的是材质内容在CBuffer的消耗，所有理论上不会优化DrawCall的数量</p>
+<p>注意点:<br>1.不能使用MaterialPropertyBlock改变材质的内容（显而易见）<br>2.被渲染的物体必须是mesh或skinned mesh，不可以是particle</p>
+<h2 id="GPU-Instancing"><a href="#GPU-Instancing" class="headerlink" title="GPU Instancing"></a>GPU Instancing</h2><p>GPU Instancing适用于处理大量相同物体<br>原理：一次绘制所有相同的物体，物体的材质，网格相同 并且 <span style="color: red;">shader必须支持GPUInstancing</span></p>
+<p>#扩展 可以使用Graphics.DrawMesh，Graphics. DrawMeshInstanced 主动进行GpuInstancing，可以使用MaterialPropertyBlock单独对某个物体修改对应的材质参数，如果是多Pass的shader，只有第一个Pass可以被处理</p>
+<p>应用 gpuinstance 可以通过帧动画（shader通过uv流动实现播放对应的动画片段） 实现 大规模的人物绘制，对于蒙皮类型的骨骼，也可以将骨骼运动坐标偏移偏移烘培到一张贴图上可以实现蒙皮人物的大规模复制，但是都有相同的缺点是无法进行动画融合</p>
+<h2 id="other-注意"><a href="#other-注意" class="headerlink" title="other 注意"></a>other 注意</h2><p><span style="color: red;">当调用 render组件的material的时候会创建出新的material实例</span>,会<span style="color: red;">中断</span>需要材质相同的合批,需要注意. 并且在删除改物体的时候 需要额外删除对应的新的material实例，否将发生内存泄漏</p>
+
+        </article>
+    </div>
+</main>
+
+    <footer>
+    <div class="buttons">
+        <button class="to-top" href="#"></button>
+    </div>
+    <div class="wrap min">
+        <section class="widget">
+            <div class="row">
+                <div class="col-m-4">
+                    <h3 class="title-recent">最新文章：</h3>
+                    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/06/guidefunction/">guidefunction</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/04/touch/">touch</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/02/48.16fixed/">48.16 fixed</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/sceneManager/">sceneManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/ugui/">ugui</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/22/curveMap/">curveMap</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-date">时光机：</h3>
+                    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">August 2024</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-tags">标签云：</h3>
+                    <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 10px;">渲染</a>
+                </div>
+            </div>
+        </section>
+        <section class="sub-footer">
+            <p>© 2025 <a href="/">我勒博客</a>. All Rights Reserved. Theme By <a href="https://github.com/Dreamer-Paul/Hingle" target="_blank" rel="nofollow">Hingle</a>.</p>
+        </section>
+    </div>
+</footer>
+
+
+<script src="/static/kico.js"></script>
+<script src="/static/hingle.js"></script>
+
+
+<script>var hingle = new Paul_Hingle({"copyright":true,"night":true});</script>
+
+  </body>
+</html>

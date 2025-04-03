@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    
+    <meta charset="UTF-8">
+    <title>unity - 我勒博客</title>
+    <link rel="shortcut icon" href="/static/img/icon.png">
+    <link rel="icon" href="/static/img/icon.png" sizes="192x192"/>
+    
+<link rel="stylesheet" href="/static/kico.css">
+<link rel="stylesheet" href="/static/hingle.css">
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta property="og:site_name" content="我勒博客">
+    <meta property="og:title" content=""/>
+    
+    <style>body:before{ content: ''; background-image: url(https://api.paugram.com/wallpaper?source=sm) }</style>
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我勒博客" type="application/atom+xml">
+</head>
+
+  <body>
+    <header>
+    <div class="head-title">
+        <h4>我勒博客</h4>
+    </div>
+    <div class="head-action">
+        <div class="toggle-btn"></div>
+        <div class="light-btn"></div>
+        <div class="search-btn"></div>
+    </div>
+    <form class="head-search" method="post">
+        <input type="text" name="s" placeholder="搜索什么？">
+    </form>
+    <nav class="head-menu">
+        <a href="/">首页</a>
+        <div class="has-child">
+            <a href>分类</a>
+            <div class="sub-menu">
+                <a class="category-link" href="/categories/Hexo/">Hexo</a><a class="category-link" href="/categories/unity/">unity</a><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+            </div>
+        </div>
+        
+            <a href="/about">关于我</a>
+        
+    </nav>
+</header>
+
+    <main>
+    <div class="wrap min">
+        <section class="home-title">
+            
+            <h1>“unity”</h1>
+        </section>
+        <section class="home-posts">
+    
+    <div class="post-item">
+        <h2>
+            <a href="/2024/09/06/guidefunction/">guidefunction</a>
+        </h2>
+    
+        <p>最近太忙没空写啥只能写写现在做的功能了，记录一下制作流程
+需求1.引导如何运转，数据结构如何设计2.在一定条件下触发，进入引导3.在引导的时候如何屏蔽输入，并且可以点击界面4.引导的不同类型 引...</p>
+    
+        <div class="post-meta">
+            <time class="date">2024.09.06</time>
+            
+                <span class="category"><a class="category-link" href="/categories/unity/">unity</a>，<a class="category-link" href="/categories/unity/%E6%96%B0%E6%89%8B%E5%BC%95%E5%AF%BC/">新手引导</a></span>
+            
+            
+        </div>
+    </div>
+    
+    <div class="post-item">
+        <h2>
+            <a href="/2024/09/04/touch/">touch</a>
+        </h2>
+    
+        <p>问题:在Unity点击事件中如何检测手势呢? 如何在不同平台互通呢？实现统一的手势检测脚本是必要的，总不能每次使用的时候都写一遍
+1.方法一 是可以通过继承 IPointerDownHandle...</p>
+    
+        <div class="post-meta">
+            <time class="date">2024.09.04</time>
+            
+                <span class="category"><a class="category-link" href="/categories/unity/">unity</a>，<a class="category-link" href="/categories/unity/Touch%E8%BE%85%E5%8A%A9/">Touch辅助</a></span>
+            
+            
+        </div>
+    </div>
+    
+    <div class="post-item">
+        <h2>
+            <a href="/2024/08/30/sceneManager/">sceneManager</a>
+        </h2>
+    
+        <p>unity 的场景管理思路
+问题：
+加载场景是异步的 很容易出现在加载A场景的时候 同时卸载A场景，或者再次加载B场景等，如何保证结果正确
+场景和场景之间的（Lighting）灯光，（Volum...</p>
+    
+        <div class="post-meta">
+            <time class="date">2024.08.30</time>
+            
+                <span class="category"><a class="category-link" href="/categories/unity/">unity</a>，<a class="category-link" href="/categories/unity/%E5%9C%BA%E6%99%AF%E7%AE%A1%E7%90%86/">场景管理</a></span>
+            
+            
+        </div>
+    </div>
+    
+    <div class="post-item">
+        <h2>
+            <a href="/2024/08/30/ugui/">ugui</a>
+        </h2>
+    
+        <p>记录Unity UGUI 在使用时，值得记录的东西
+UGUI收集绘制列表先说一下UI Depth 的概念  ps. 如果物体A的网格覆盖在了物体B上面(物体在Hierarchy面板 谁靠后谁覆盖...</p>
+    
+        <div class="post-meta">
+            <time class="date">2024.08.30</time>
+            
+                <span class="category"><a class="category-link" href="/categories/unity/">unity</a>，<a class="category-link" href="/categories/unity/ugui%E7%9B%B8%E5%85%B3/">ugui相关</a></span>
+            
+            
+        </div>
+    </div>
+    
+    <div class="post-item">
+        <h2>
+            <a href="/2024/08/22/curveMap/">curveMap</a>
+        </h2>
+    
+        <p>实现曲面地图效果s
+
+
+首先地图肯定是弯曲了,在制作流程中地图默认还是直的 但是在运行后会发生弯曲
+map核心思想是 通过shader的 _CurvePos（主角）位置 对Map 的网格的y坐标...</p>
+    
+        <div class="post-meta">
+            <time class="date">2024.08.22</time>
+            
+                <span class="category"><a class="category-link" href="/categories/unity/">unity</a>，<a class="category-link" href="/categories/unity/%E6%9B%B2%E9%9D%A2%E5%9C%B0%E5%9B%BE/">曲面地图</a></span>
+            
+            
+        </div>
+    </div>
+    
+    <div class="post-item">
+        <h2>
+            <a href="/2024/08/22/addressable/">addressable</a>
+        </h2>
+    
+        <p>做一个简单的使用记录 注意:以下在Bundle方式下运转的记录 不考虑编辑器模式
+Addressable的基础API123456789101112131415161718var asset = ...</p>
+    
+        <div class="post-meta">
+            <time class="date">2024.08.22</time>
+            
+                <span class="category"><a class="category-link" href="/categories/unity/">unity</a>，<a class="category-link" href="/categories/unity/addressable/">addressable</a></span>
+            
+            
+        </div>
+    </div>
+    
+    <div class="post-item">
+        <h2>
+            <a href="/2024/08/07/instance/">unity的合批</a>
+        </h2>
+    
+        <p>unity的合批有很多类型  静态 , 动态 , GpuInstance , SrpBatch
+众所周知,绘制一个网格 需要 网格的顶点(Vectex),网格顶点组成三角面片的排序信息(Inde...</p>
+    
+        <div class="post-meta">
+            <time class="date">2024.08.07</time>
+            
+                <span class="category"><a class="category-link" href="/categories/unity/">unity</a>，<a class="category-link" href="/categories/unity/%E5%90%88%E6%89%B9/">合批"</a></span>
+            
+            
+                <span class="tags"><a class="-none-link" href="/tags/%E6%B8%B2%E6%9F%93/" rel="tag">渲染</a></span>
+            
+        </div>
+    </div>
+    
+</section>
+
+        <section class="page-navigator">
+            <span class="page-number current">1</span>
+        </section>
+    </div>
+</main>
+
+    <footer>
+    <div class="buttons">
+        <button class="to-top" href="#"></button>
+    </div>
+    <div class="wrap min">
+        <section class="widget">
+            <div class="row">
+                <div class="col-m-4">
+                    <h3 class="title-recent">最新文章：</h3>
+                    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/06/guidefunction/">guidefunction</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/04/touch/">touch</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/02/48.16fixed/">48.16 fixed</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/sceneManager/">sceneManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/ugui/">ugui</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/22/curveMap/">curveMap</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-date">时光机：</h3>
+                    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">August 2024</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-tags">标签云：</h3>
+                    <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 10px;">渲染</a>
+                </div>
+            </div>
+        </section>
+        <section class="sub-footer">
+            <p>© 2025 <a href="/">我勒博客</a>. All Rights Reserved. Theme By <a href="https://github.com/Dreamer-Paul/Hingle" target="_blank" rel="nofollow">Hingle</a>.</p>
+        </section>
+    </div>
+</footer>
+
+
+<script src="/static/kico.js"></script>
+<script src="/static/hingle.js"></script>
+
+
+<script>var hingle = new Paul_Hingle({"copyright":true,"night":true});</script>
+
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    
+    <meta charset="UTF-8">
+    <title>ugui - 我勒博客</title>
+    <link rel="shortcut icon" href="/static/img/icon.png">
+    <link rel="icon" href="/static/img/icon.png" sizes="192x192"/>
+    
+<link rel="stylesheet" href="/static/kico.css">
+<link rel="stylesheet" href="/static/hingle.css">
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta property="og:site_name" content="我勒博客">
+    <meta property="og:title" content="ugui"/>
+    
+    <style>body:before{ content: ''; background-image: url(https://api.paugram.com/wallpaper?source=sm) }</style>
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我勒博客" type="application/atom+xml">
+</head>
+
+  <body>
+    <header>
+    <div class="head-title">
+        <h4>我勒博客</h4>
+    </div>
+    <div class="head-action">
+        <div class="toggle-btn"></div>
+        <div class="light-btn"></div>
+        <div class="search-btn"></div>
+    </div>
+    <form class="head-search" method="post">
+        <input type="text" name="s" placeholder="搜索什么？">
+    </form>
+    <nav class="head-menu">
+        <a href="/">首页</a>
+        <div class="has-child">
+            <a href>分类</a>
+            <div class="sub-menu">
+                <a class="category-link" href="/categories/Hexo/">Hexo</a><a class="category-link" href="/categories/unity/">unity</a><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+            </div>
+        </div>
+        
+            <a href="/about">关于我</a>
+        
+    </nav>
+</header>
+
+    <main>
+    <div class="wrap min">
+        <section class="page-title">
+            <h2>ugui</h2>
+        </section>
+        <article class="page-content">
+        
+            <blockquote>这篇文章上次修改于 217 天前，可能其部分内容已经发生变化，如有疑问可询问作者。</blockquote>
+        
+            <p>记录Unity UGUI 在使用时，值得记录的东西</p>
+<h3 id="UGUI收集绘制列表"><a href="#UGUI收集绘制列表" class="headerlink" title="UGUI收集绘制列表"></a>UGUI收集绘制列表</h3><p>先说一下UI Depth 的概念  ps. 如果物体A的<span style="color: red;">网格覆盖在了物体B上面(物体在Hierarchy面板 谁靠后谁覆盖别的物体)</span>  此时如果物体A 的Depth 是0 物体B 的Depth1<br>展示一下流程</p>
+<ol>
+<li>UGUI 对所有物体的Depth 从小到大排序</li>
+<li>对于相同Depth的物体按照MaterialID 就行 从小到大排序</li>
+<li>对于相同MaterialID的物体按照TextureID 就行 从小到大排序</li>
+<li>TextureID也相同话按照Hierarchy面板的顺序来</li>
+</ol>
+<h3 id="UGUI对绘制列表进行合批"><a href="#UGUI对绘制列表进行合批" class="headerlink" title="UGUI对绘制列表进行合批"></a>UGUI对绘制列表进行合批</h3><p>对于排序结果visiableList,相邻的元素 如果材质和贴图一样 即可合批<span style="color: red;">(就算深度不一样也是可以的)</span></p>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>对于合批是按照canvas下的UI的网格为单位的，当其中任何一共元素的材质，网格，位置，颜色，创建或者删除，都会触发重新进行合批的操作（ReBuild）</p>
+<h3 id="一些案例"><a href="#一些案例" class="headerlink" title="一些案例"></a>一些案例</h3><p>如下图 存在5个Item对象 其中Item中的_imgHeroIcon是一张大图 而_imgHeroIConBg存在Mask组件对其进行裁剪，问题在于_imgHeroIcon的Mesh过大,和相邻的Item的Mesh 发生了重叠，导致了在合批的过程中Depth完全混乱，从而打断合批</p>
+<center><figure>
+    <img src="image.png">
+    <figcaption>Depth错乱</figcaption>
+</figure></center>
+解决：使用和Item本身大小一样的Mesh 去绘制_imgHeroIcon 其中的裁剪效果 通过UV进行修正
+<center><figure>
+    <img src="image1.png">
+    <figcaption>Mesh修正</figcaption>
+</figure></center>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UIMaskImage</span> : <span class="title">Image</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> Vector2 _uvOffset = Vector2.zero;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnPopulateMesh</span>(<span class="params">VertexHelper vh</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (sprite == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">base</span>.OnPopulateMesh(vh);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> uv = (sprite != <span class="literal">null</span>) ? DataUtility.GetOuterUV(sprite) : Vector4.zero;</span><br><span class="line">        <span class="keyword">var</span> rect = rectTransform.rect;</span><br><span class="line">        <span class="keyword">var</span> scale = <span class="keyword">new</span> Vector2(rect.width / sprite.rect.width,</span><br><span class="line">            rect.height / sprite.rect.height);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//对UV缩放并添加偏移</span></span><br><span class="line">        <span class="keyword">var</span> uvSize = <span class="keyword">new</span> Vector2(uv.z - uv.x, uv.w - uv.y);</span><br><span class="line">        uv = <span class="keyword">new</span> Vector4(uv.x + (<span class="number">1</span> - scale.x) * uvSize.x * <span class="number">0.5f</span> + _uvOffset.x * <span class="number">0.01f</span>,</span><br><span class="line">            uv.y + (<span class="number">1</span> - scale.y) * uvSize.y * <span class="number">0.5f</span> + _uvOffset.y * <span class="number">0.01f</span>,</span><br><span class="line">            uv.z - (<span class="number">1</span> - scale.x) * uvSize.x * <span class="number">0.5f</span> + _uvOffset.x * <span class="number">0.01f</span>,</span><br><span class="line">            uv.w - (<span class="number">1</span> - scale.y) * uvSize.y * <span class="number">0.5f</span> + _uvOffset.y * <span class="number">0.01f</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> padding = sprite == <span class="literal">null</span> ? Vector4.zero : DataUtility.GetPadding(sprite);</span><br><span class="line">        <span class="keyword">var</span> size = sprite == <span class="literal">null</span> ? Vector2.zero : <span class="keyword">new</span> Vector2(sprite.rect.width, sprite.rect.height);</span><br><span class="line"></span><br><span class="line">        Rect r = GetPixelAdjustedRect();</span><br><span class="line"></span><br><span class="line">        <span class="built_in">int</span> spriteW = Mathf.RoundToInt(size.x);</span><br><span class="line">        <span class="built_in">int</span> spriteH = Mathf.RoundToInt(size.y);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> v = <span class="keyword">new</span> Vector4(</span><br><span class="line">            padding.x / spriteW,</span><br><span class="line">            padding.y / spriteH,</span><br><span class="line">            (spriteW - padding.z) / spriteW,</span><br><span class="line">            (spriteH - padding.w) / spriteH);</span><br><span class="line"></span><br><span class="line">        v = <span class="keyword">new</span> Vector4(</span><br><span class="line">            r.x + r.width * v.x,</span><br><span class="line">            r.y + r.height * v.y,</span><br><span class="line">            r.x + r.width * v.z,</span><br><span class="line">            r.y + r.height * v.w</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> color32 = color;</span><br><span class="line">        vh.Clear();</span><br><span class="line">        vh.AddVert(<span class="keyword">new</span> Vector3(v.x, v.y), color32, <span class="keyword">new</span> Vector2(uv.x, uv.y));</span><br><span class="line">        vh.AddVert(<span class="keyword">new</span> Vector3(v.x, v.w), color32, <span class="keyword">new</span> Vector2(uv.x, uv.w));</span><br><span class="line">        vh.AddVert(<span class="keyword">new</span> Vector3(v.z, v.w), color32, <span class="keyword">new</span> Vector2(uv.z, uv.w));</span><br><span class="line">        vh.AddVert(<span class="keyword">new</span> Vector3(v.z, v.y), color32, <span class="keyword">new</span> Vector2(uv.z, uv.y));</span><br><span class="line"></span><br><span class="line">        vh.AddTriangle(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">        vh.AddTriangle(<span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </article>
+    </div>
+</main>
+
+    <footer>
+    <div class="buttons">
+        <button class="to-top" href="#"></button>
+    </div>
+    <div class="wrap min">
+        <section class="widget">
+            <div class="row">
+                <div class="col-m-4">
+                    <h3 class="title-recent">最新文章：</h3>
+                    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/06/guidefunction/">guidefunction</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/04/touch/">touch</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/02/48.16fixed/">48.16 fixed</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/sceneManager/">sceneManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/ugui/">ugui</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/22/curveMap/">curveMap</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-date">时光机：</h3>
+                    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">August 2024</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-tags">标签云：</h3>
+                    <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 10px;">渲染</a>
+                </div>
+            </div>
+        </section>
+        <section class="sub-footer">
+            <p>© 2025 <a href="/">我勒博客</a>. All Rights Reserved. Theme By <a href="https://github.com/Dreamer-Paul/Hingle" target="_blank" rel="nofollow">Hingle</a>.</p>
+        </section>
+    </div>
+</footer>
+
+
+<script src="/static/kico.js"></script>
+<script src="/static/hingle.js"></script>
+
+
+<script>var hingle = new Paul_Hingle({"copyright":true,"night":true});</script>
+
+  </body>
+</html>

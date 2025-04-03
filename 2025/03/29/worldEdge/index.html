@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    
+    <meta charset="UTF-8">
+    <title>Edge - 我勒博客</title><meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="/static/img/icon.png">
+    <link rel="icon" href="/static/img/icon.png" sizes="192x192"/>
+    
+<link rel="stylesheet" href="/static/kico.css">
+<link rel="stylesheet" href="/static/hingle.css">
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta property="og:site_name" content="我勒博客">
+    <meta property="og:title" content="Edge"/>
+    
+    <style>body:before{ content: ''; background-image: url(https://api.paugram.com/wallpaper?source=sm) }</style>
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我勒博客" type="application/atom+xml">
+</head>
+
+  <body>
+    <header>
+    <div class="head-title">
+        <h4>我勒博客</h4>
+    </div>
+    <div class="head-action">
+        <div class="toggle-btn"></div>
+        <div class="light-btn"></div>
+        <div class="search-btn"></div>
+    </div>
+    <form class="head-search" method="post">
+        <input type="text" name="s" placeholder="搜索什么？">
+    </form>
+    <nav class="head-menu">
+        <a href="/">首页</a>
+        <div class="has-child">
+            <a href>分类</a>
+            <div class="sub-menu">
+                <a class="category-link" href="/categories/Hexo/">Hexo</a><a class="category-link" href="/categories/unity/">unity</a><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+            </div>
+        </div>
+        
+            <a href="/about">关于我</a>
+        
+    </nav>
+</header>
+
+    <main>
+    <div class="wrap min">
+        <section class="page-title">
+            <h2>Edge</h2>
+        </section>
+        <article class="page-content">
+        
+            <p>大地图按地块为每个地快,地图里划分每个区域,区域的形状是不规则的多边形</p>
+<h3 id="如何绘制出区域的边界"><a href="#如何绘制出区域的边界" class="headerlink" title="如何绘制出区域的边界"></a>如何绘制出区域的边界</h3><p>遵从由简的原则</p>
+<h2 id="现在看一下只有一个地块的边界如何绘制"><a href="#现在看一下只有一个地块的边界如何绘制" class="headerlink" title="现在看一下只有一个地块的边界如何绘制"></a>现在看一下只有一个地块的边界如何绘制</h2><p>在unity 中创建一个Plane 给它一个最简单材质 这个材质只是简单的讲贴图绘制上去结果如下</p>
+<center><figure>
+    <img src="sourceEdge.png">
+    <figcaption>一个地块</figcaption>
+</figure></center>
+
+<p>它的贴图是</p>
+<center><figure>
+    <img src="edge.png">
+    <figcaption>贴图</figcaption>
+</figure></center>
+
+
+<p>下面分析一下 其实不难看出 因为贴图本身靠上 所以 uv 的y大于0的一段是绘制的线在的位置</p>
+<h2 id="下面考虑通解"><a href="#下面考虑通解" class="headerlink" title="下面考虑通解"></a>下面考虑通解</h2><p>假设我们按照逆时针来按地块绘制线 其实就是在每一个地块上创建一个plane来绘制边缘 但不同的是需要考虑不同方向的边缘如何绘制</p>
+<p>看一下 右右的Plane 如何绘制</p>
+<center><figure>
+    <img src="RightToRight.png">
+    <figcaption>右右</figcaption>
+</figure></center>
+其实很简单 简单分析就可以了
+
+<p>但是发现如果地图的边缘一直是右右,每一个右右都会创建一个plane 其实不太对 可以把上一个地块生成的plane的右边的边缘线屏蔽下下一个地块的位置就可以了</p>
+<center><figure>
+    <img src="RRightToRight.png">
+    <figcaption>右右右优化</figcaption>
+</figure></center>
+
+<p>其实问题的解法已经一幕了然了<br>下面分析一个特殊的情况<br>上右的情况</p>
+<center><figure>
+    <img src="UpToRight.png">
+    <figcaption>上右</figcaption>
+</figure></center>
+这个情况因为我们绘制的时候安装逆时针跑地块 图片中出现确实顺时针的绘制 当然也不是非要按照图片里的方法来绘制，这里只是展示一种方法
+
+
+<p>在分析一下逆时针的情况</p>
+<center><figure>
+    <img src="RightToUp.png">
+    <figcaption>右上</figcaption>
+</figure></center>
+
+<p>其实更加分析发现 这种情况下 可以拆出2个三角形的mesh来绘制了 不拆其实也可以 但不太直观了<br>其实拆出来也可以在生成mesh 的时候 一个区域的边缘有多个mesh的网格 不会让没个mesh的大小过大</p>
+<p>其实到这里所有的情况已经分析完了 其他的只是分析不同 但划分的逻辑是一样的</p>
+<!-- flag of hidden posts -->
+        </article>
+    </div>
+</main>
+
+    <footer>
+    <div class="buttons">
+        <button class="to-top" href="#"></button>
+    </div>
+    <div class="wrap min">
+        <section class="widget">
+            <div class="row">
+                <div class="col-m-4">
+                    <h3 class="title-recent">最新文章：</h3>
+                    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/06/guidefunction/">guidefunction</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/04/touch/">touch</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/02/48.16fixed/">48.16 fixed</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/sceneManager/">sceneManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/ugui/">ugui</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/22/curveMap/">curveMap</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-date">时光机：</h3>
+                    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">August 2024</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-tags">标签云：</h3>
+                    <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 10px;">渲染</a>
+                </div>
+            </div>
+        </section>
+        <section class="sub-footer">
+            <p>© 2025 <a href="/">我勒博客</a>. All Rights Reserved. Theme By <a href="https://github.com/Dreamer-Paul/Hingle" target="_blank" rel="nofollow">Hingle</a>.</p>
+        </section>
+    </div>
+</footer>
+
+
+<script src="/static/kico.js"></script>
+<script src="/static/hingle.js"></script>
+
+
+<script>var hingle = new Paul_Hingle({"copyright":true,"night":true});</script>
+
+  </body>
+</html>

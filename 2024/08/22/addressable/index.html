@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    
+    <meta charset="UTF-8">
+    <title>addressable - 我勒博客</title>
+    <link rel="shortcut icon" href="/static/img/icon.png">
+    <link rel="icon" href="/static/img/icon.png" sizes="192x192"/>
+    
+<link rel="stylesheet" href="/static/kico.css">
+<link rel="stylesheet" href="/static/hingle.css">
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta property="og:site_name" content="我勒博客">
+    <meta property="og:title" content="addressable"/>
+    
+    <style>body:before{ content: ''; background-image: url(https://api.paugram.com/wallpaper?source=sm) }</style>
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我勒博客" type="application/atom+xml">
+</head>
+
+  <body>
+    <header>
+    <div class="head-title">
+        <h4>我勒博客</h4>
+    </div>
+    <div class="head-action">
+        <div class="toggle-btn"></div>
+        <div class="light-btn"></div>
+        <div class="search-btn"></div>
+    </div>
+    <form class="head-search" method="post">
+        <input type="text" name="s" placeholder="搜索什么？">
+    </form>
+    <nav class="head-menu">
+        <a href="/">首页</a>
+        <div class="has-child">
+            <a href>分类</a>
+            <div class="sub-menu">
+                <a class="category-link" href="/categories/Hexo/">Hexo</a><a class="category-link" href="/categories/unity/">unity</a><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+            </div>
+        </div>
+        
+            <a href="/about">关于我</a>
+        
+    </nav>
+</header>
+
+    <main>
+    <div class="wrap min">
+        <section class="page-title">
+            <h2>addressable</h2>
+        </section>
+        <article class="page-content">
+        
+            <blockquote>这篇文章上次修改于 225 天前，可能其部分内容已经发生变化，如有疑问可询问作者。</blockquote>
+        
+            <p>做一个简单的使用记录 注意:以下在Bundle方式下运转的记录 不考虑编辑器模式</p>
+<h3 id="Addressable的基础API"><a href="#Addressable的基础API" class="headerlink" title="Addressable的基础API"></a>Addressable的基础API</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> asset = Addressables.LoadAssetAsync&lt;T&gt;(key); <span class="comment">//加载Asset资产</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> assetObj = Object.Instantiate(asset);<span class="comment">//通过asset实例化资源</span></span><br><span class="line"></span><br><span class="line">Addressables.Release(asset); <span class="comment">//释放Asset资产</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = Addressables.InstantiateAsync(key,parent); <span class="comment">// 实例化Asset</span></span><br><span class="line"></span><br><span class="line">Addressables.ReleaseInstance(obj);  <span class="comment">//释放实例化的资产</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sceneInstance = Addressables.LoadSceneAsync(sceneName,loadMode);<span class="comment">//加载场景</span></span><br><span class="line"></span><br><span class="line">Addressables.UnloadSceneAsync(sceneInstance);<span class="comment">//卸载场景</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//上面的结果其实都是返回一个AsyncOperationHandle对象 获取的是对应的Result 他们都是异步的当需要同步拿到结果调用</span></span><br><span class="line">asyncHandle.WaitForCompletion();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Addressable-支持-await-async"><a href="#Addressable-支持-await-async" class="headerlink" title="Addressable 支持 await async"></a>Addressable 支持 await async</h3><p>增加 AsyncOperationHandle 对异步的支持</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">IAsyncOperationExtensions</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AsyncOperationAwaiter <span class="title">GetAwaiter</span>(<span class="params"><span class="keyword">this</span> AsyncOperationHandle operation</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AsyncOperationAwaiter(operation);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title">AsyncOperationAwaiter</span>&lt;<span class="title">T</span>&gt; <span class="title">GetAwaiter</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="keyword">this</span> AsyncOperationHandle&lt;T&gt; operation</span>) <span class="keyword">where</span> T : <span class="keyword">class</span></span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AsyncOperationAwaiter&lt;T&gt;(operation);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">readonly</span> <span class="keyword">struct</span> AsyncOperationAwaiter : INotifyCompletion</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> AsyncOperationHandle KOperation;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">AsyncOperationAwaiter</span>(<span class="params">AsyncOperationHandle operation</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            KOperation = operation;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">bool</span> IsCompleted =&gt; KOperation.Status != AsyncOperationStatus.None;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnCompleted</span>(<span class="params">Action continuation</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            KOperation.Completed += (op) =&gt; continuation?.Invoke();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="built_in">object</span> <span class="title">GetResult</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> KOperation.Result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">readonly</span> <span class="keyword">struct</span> AsyncOperationAwaiter&lt;T&gt; : INotifyCompletion <span class="keyword">where</span> T : <span class="keyword">class</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> AsyncOperationHandle&lt;T&gt; KOperation;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">AsyncOperationAwaiter</span>(<span class="params">AsyncOperationHandle&lt;T&gt; operation</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            KOperation = operation;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">bool</span> IsCompleted =&gt; KOperation.Status != AsyncOperationStatus.None;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnCompleted</span>(<span class="params">Action continuation</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            KOperation.Completed += (op) =&gt; continuation?.Invoke();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> T <span class="title">GetResult</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> KOperation.Result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="加载卸载的内部计数"><a href="#加载卸载的内部计数" class="headerlink" title="加载卸载的内部计数"></a>加载卸载的内部计数</h3><p>A.LoadAssetAsync 对应的Asset的计数+1 返回Asset资产<br>B.InstantiateAsync 对应的Asset的计数+1 返回实例化后的Asset<br>AB 使用同一个计数<br>C Release 对应的Asset 的计数 -1<br>D ReleaseInstance 对应的Asset 的计数 -1 实例化后的Asset删除<br>Asset的记数变成0后会被释放</p>
+<h3 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h3><p>在通过先加载资产，后自行实例化的方式调用需要注意，在这种情况下对资产进行释放后，<span style="color: red;">实例化出来的物体不会被销毁，但是它用到的所有资产都会被释放掉(计数为0)</span></p>
+<center><figure>
+    <img src="image.png">
+    <figcaption>Addressable.LoadAssetAsync-Object.Instantiate</figcaption>
+</figure></center>
+<center><figure>
+    <img src="image-1.png">
+    <figcaption>Addressable.LoadAssetAsync-Object.Instantiate-Release</figcaption>
+</figure></center>
+
+<p>在通过直接实例化资源的时候，需要注意在这种情况下释放实例化资源<span style="color: red;">实例化的物体会同步被销毁</span></p>
+<center><figure>
+    <img src="image-2.png">
+    <figcaption>Addressable.InstantiateAsync</figcaption>
+</figure></center>
+<center><figure>
+    <img src="image-3.png">
+    <figcaption>Addressable.InstantiateAsync-Addressables.ReleaseInstance</figcaption>
+</figure></center>
+
+
+<p>其他坑<br>1.<a target="_blank" rel="noopener" href="https://issuetracker.unity3d.com/issues/freeze-when-loading-the-scene-asynchronously-and-using-waitforcompletion">场景释放后再能进行同步加载</a><br>2.异步加载对象A的时候 不能直接调用同步加载对象A必须等异步完成<br>3.<a target="_blank" rel="noopener" href="https://discussions.unity.com/t/call-addressables-loadassetasync-and-waitforcompletion-cause-an-error/906421/3">热更新完成后,加载资源报错</a></p>
+
+        </article>
+    </div>
+</main>
+
+    <footer>
+    <div class="buttons">
+        <button class="to-top" href="#"></button>
+    </div>
+    <div class="wrap min">
+        <section class="widget">
+            <div class="row">
+                <div class="col-m-4">
+                    <h3 class="title-recent">最新文章：</h3>
+                    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/06/guidefunction/">guidefunction</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/04/touch/">touch</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/02/48.16fixed/">48.16 fixed</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/sceneManager/">sceneManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/ugui/">ugui</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/22/curveMap/">curveMap</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-date">时光机：</h3>
+                    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">August 2024</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-tags">标签云：</h3>
+                    <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 10px;">渲染</a>
+                </div>
+            </div>
+        </section>
+        <section class="sub-footer">
+            <p>© 2025 <a href="/">我勒博客</a>. All Rights Reserved. Theme By <a href="https://github.com/Dreamer-Paul/Hingle" target="_blank" rel="nofollow">Hingle</a>.</p>
+        </section>
+    </div>
+</footer>
+
+
+<script src="/static/kico.js"></script>
+<script src="/static/hingle.js"></script>
+
+
+<script>var hingle = new Paul_Hingle({"copyright":true,"night":true});</script>
+
+  </body>
+</html>

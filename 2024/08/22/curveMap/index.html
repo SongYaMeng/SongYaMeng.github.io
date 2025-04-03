@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    
+    <meta charset="UTF-8">
+    <title>curveMap - 我勒博客</title>
+    <link rel="shortcut icon" href="/static/img/icon.png">
+    <link rel="icon" href="/static/img/icon.png" sizes="192x192"/>
+    
+<link rel="stylesheet" href="/static/kico.css">
+<link rel="stylesheet" href="/static/hingle.css">
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta property="og:site_name" content="我勒博客">
+    <meta property="og:title" content="curveMap"/>
+    
+    <style>body:before{ content: ''; background-image: url(https://api.paugram.com/wallpaper?source=sm) }</style>
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我勒博客" type="application/atom+xml">
+</head>
+
+  <body>
+    <header>
+    <div class="head-title">
+        <h4>我勒博客</h4>
+    </div>
+    <div class="head-action">
+        <div class="toggle-btn"></div>
+        <div class="light-btn"></div>
+        <div class="search-btn"></div>
+    </div>
+    <form class="head-search" method="post">
+        <input type="text" name="s" placeholder="搜索什么？">
+    </form>
+    <nav class="head-menu">
+        <a href="/">首页</a>
+        <div class="has-child">
+            <a href>分类</a>
+            <div class="sub-menu">
+                <a class="category-link" href="/categories/Hexo/">Hexo</a><a class="category-link" href="/categories/unity/">unity</a><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+            </div>
+        </div>
+        
+            <a href="/about">关于我</a>
+        
+    </nav>
+</header>
+
+    <main>
+    <div class="wrap min">
+        <section class="post-title">
+            <h2>curveMap</h2>
+            <div class="post-meta">
+                <time class="date">2024.08.22</time>
+            
+                <span class="category"><a class="category-link" href="/categories/unity/">unity</a>，<a class="category-link" href="/categories/unity/%E6%9B%B2%E9%9D%A2%E5%9C%B0%E5%9B%BE/">曲面地图</a></span>
+            
+            </div>
+        </section>
+        <article class="post-content">
+        
+            <blockquote>这篇文章上次修改于 225 天前，可能其部分内容已经发生变化，如有疑问可询问作者。</blockquote>
+        
+            <p>实现曲面地图效果s</p>
+<center><img src="curveAnim.gif" width = "889" height = "912"></center>
+
+<p>首先地图肯定是弯曲了,在制作流程中地图默认还是直的 但是在运行后会发生弯曲</p>
+<h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><p>核心思想是 通过shader的 _CurvePos（主角）位置 对Map 的网格的y坐标进行一个向下的偏移</p>
+<figure class="highlight plaintext"><figcaption><span>shader</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">Shader &quot;Unlit/CurveMap&quot;</span><br><span class="line">&#123;</span><br><span class="line">    Properties</span><br><span class="line">    &#123;</span><br><span class="line">	   [NoScaleOffset]</span><br><span class="line">        _MainTex (&quot;颜色纹理&quot;, 2D) = &quot;white&quot; &#123;&#125;</span><br><span class="line">		_BendY(&quot;弯曲程度&quot;, Range(0,0.01)) = 0.0</span><br><span class="line">		_CurvePos(&quot;弯曲起点&quot;,float) = 0</span><br><span class="line">    &#125;</span><br><span class="line">    SubShader</span><br><span class="line">    &#123;</span><br><span class="line">        Tags &#123; &quot;RenderType&quot;=&quot;Opaque&quot; &#125;</span><br><span class="line">        LOD 100</span><br><span class="line"></span><br><span class="line">        Pass</span><br><span class="line">        &#123;</span><br><span class="line">            CGPROGRAM</span><br><span class="line">            #pragma vertex vert</span><br><span class="line">            #pragma fragment frag</span><br><span class="line">            // make fog work</span><br><span class="line">            #pragma multi_compile_fog</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            #include &quot;UnityCG.cginc&quot;</span><br><span class="line"></span><br><span class="line">            struct appdata</span><br><span class="line">            &#123;</span><br><span class="line">                float4 vertex : POSITION;</span><br><span class="line"></span><br><span class="line">				//获取模型第一套UV</span><br><span class="line">                float2 uv : TEXCOORD0;</span><br><span class="line"></span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            struct v2f</span><br><span class="line">            &#123;</span><br><span class="line">                float2 uv : TEXCOORD0;</span><br><span class="line">                //定义顶点世界变量</span><br><span class="line">                float4 WordData : TEXCOORD1;</span><br><span class="line">                float4 vertex : SV_POSITION;</span><br><span class="line">                UNITY_FOG_COORDS(4)</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">			//颜色纹理</span><br><span class="line">            sampler2D _MainTex;</span><br><span class="line">			float _BendY;</span><br><span class="line">            float _CurvePos;</span><br><span class="line">            v2f vert (appdata v)</span><br><span class="line">            &#123;</span><br><span class="line">                v2f o;</span><br><span class="line">                o.uv = v.uv;</span><br><span class="line">                float3 WordPos = mul(unity_ObjectToWorld, v.vertex);</span><br><span class="line">                //获取Y轴坐标</span><br><span class="line">                o.WordData.x = WordPos.y;</span><br><span class="line">                //Y轴扭 = 曲依据Z坐标变化</span><br><span class="line">                WordPos.y -= pow(WordPos.z+_CurvePos, 2)*_BendY;</span><br><span class="line">                //获取位移位置</span><br><span class="line">                WordPos -= mul(unity_ObjectToWorld, float4(0, 0, 0, 1));</span><br><span class="line">                //修改世界顶点转回物体自身顶点。</span><br><span class="line">                v.vertex = mul(unity_WorldToObject, WordPos);</span><br><span class="line">                //转换为裁切空间</span><br><span class="line">                o.vertex = UnityObjectToClipPos(v.vertex);</span><br><span class="line">                UNITY_TRANSFER_FOG(o,o.vertex);</span><br><span class="line">                return o;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            fixed4 frag (v2f i) : SV_Target</span><br><span class="line">            &#123;</span><br><span class="line">                fixed4 col = tex2D(_MainTex, i.uv);</span><br><span class="line">                // apply fog</span><br><span class="line">                UNITY_APPLY_FOG(i.fogCoord, col);</span><br><span class="line">                return col;</span><br><span class="line">            &#125;</span><br><span class="line">            ENDCG</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="主角"><a href="#主角" class="headerlink" title="主角"></a>主角</h3><p>主角的位置改变 将位置传递给shader 依次来改变地图曲线状态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class CurveMapLogic : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line">    public Material _material; //地图材质</span><br><span class="line">    public static float _curveStrength = 0.0005f; //曲率</span><br><span class="line">    private void Start()</span><br><span class="line">    &#123;</span><br><span class="line">        _material.SetFloat(&quot;_BendY&quot;, _curveStrength);</span><br><span class="line">    &#125;</span><br><span class="line">    void Update()</span><br><span class="line">    &#123;</span><br><span class="line">        _material.SetFloat(&quot;_CurvePos&quot;, -1 * transform.position.z);</span><br><span class="line">    &#125;</span><br><span class="line">    //运行状态结束需要还原曲率</span><br><span class="line">    private void OnApplicationQuit()</span><br><span class="line">    &#123;</span><br><span class="line">        _material.SetFloat(&quot;_BendY&quot;, 0);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="地图物件"><a href="#地图物件" class="headerlink" title="地图物件"></a>地图物件</h3><p>地图的物件在不运行状态还是贴合地面  运行后需要根据map shader的代码对y 的偏移同步对应的坐标</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class CurveMapEntity : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line">    private Transform _transform;</span><br><span class="line"></span><br><span class="line">    // Update is called once per frame</span><br><span class="line">    void Update()</span><br><span class="line">    &#123;</span><br><span class="line">        var mainPlayerZ = CurvePlayer.Instance.transform.position.z;</span><br><span class="line">        var position = transform.position;</span><br><span class="line">        float distance = position.z - mainPlayerZ;</span><br><span class="line">        float y = Mathf.Pow(position.z + (-1 * mainPlayerZ), 2) * CurveMapLogic._curveStrength + distance / 100;</span><br><span class="line">        position.Set(position.x, -y, position.z);</span><br><span class="line">        transform.position = position;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用的注意"><a href="#使用的注意" class="headerlink" title="使用的注意"></a>使用的注意</h3><p>场景物体过多 可以统一进行update  在主角z坐标发生变化的时候 统一进行更新 不必每次Update<br>使用这种方法的时候 所有物体没法进行静态批处理 暂时不知道如何优化 理论上可以通过脚本和视野范围动态筛选 主动发起静态合批？需要在琢磨琢磨</p>
+
+        </article>
+        <section class="post-near">
+            <ul>
+                
+                    <li>上一篇: <a href="/2024/08/30/ugui/">ugui</a></li>
+                
+                
+                    <li>下一篇: <a href="/2024/08/22/addressable/">addressable</a></li>
+                
+            </ul>
+        </section>
+        
+    
+        <section class="post-author">
+        
+            <figure class="author-avatar">
+                <img src="https://sdn.geekzu.org/avatar/d22eb460ecab37fcd7205e6a3c55c228?s=200&r=X&d=" alt="Sym" />
+            </figure>
+        
+            <div class="author-info">
+                <h4>Sym</h4>
+                <p>SYM</p>
+            </div>
+        </section>
+    
+    </div>
+</main>
+
+    <footer>
+    <div class="buttons">
+        <button class="to-top" href="#"></button>
+    </div>
+    <div class="wrap min">
+        <section class="widget">
+            <div class="row">
+                <div class="col-m-4">
+                    <h3 class="title-recent">最新文章：</h3>
+                    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/06/guidefunction/">guidefunction</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/04/touch/">touch</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/02/48.16fixed/">48.16 fixed</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/sceneManager/">sceneManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/ugui/">ugui</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/22/curveMap/">curveMap</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-date">时光机：</h3>
+                    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">August 2024</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-tags">标签云：</h3>
+                    <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 10px;">渲染</a>
+                </div>
+            </div>
+        </section>
+        <section class="sub-footer">
+            <p>© 2025 <a href="/">我勒博客</a>. All Rights Reserved. Theme By <a href="https://github.com/Dreamer-Paul/Hingle" target="_blank" rel="nofollow">Hingle</a>.</p>
+        </section>
+    </div>
+</footer>
+
+
+<script src="/static/kico.js"></script>
+<script src="/static/hingle.js"></script>
+
+
+<script>var hingle = new Paul_Hingle({"copyright":true,"night":true});</script>
+
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    
+    <meta charset="UTF-8">
+    <title>sceneManager - 我勒博客</title>
+    <link rel="shortcut icon" href="/static/img/icon.png">
+    <link rel="icon" href="/static/img/icon.png" sizes="192x192"/>
+    
+<link rel="stylesheet" href="/static/kico.css">
+<link rel="stylesheet" href="/static/hingle.css">
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta property="og:site_name" content="我勒博客">
+    <meta property="og:title" content="sceneManager"/>
+    
+    <style>body:before{ content: ''; background-image: url(https://api.paugram.com/wallpaper?source=sm) }</style>
+    
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我勒博客" type="application/atom+xml">
+</head>
+
+  <body>
+    <header>
+    <div class="head-title">
+        <h4>我勒博客</h4>
+    </div>
+    <div class="head-action">
+        <div class="toggle-btn"></div>
+        <div class="light-btn"></div>
+        <div class="search-btn"></div>
+    </div>
+    <form class="head-search" method="post">
+        <input type="text" name="s" placeholder="搜索什么？">
+    </form>
+    <nav class="head-menu">
+        <a href="/">首页</a>
+        <div class="has-child">
+            <a href>分类</a>
+            <div class="sub-menu">
+                <a class="category-link" href="/categories/Hexo/">Hexo</a><a class="category-link" href="/categories/unity/">unity</a><a class="category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+            </div>
+        </div>
+        
+            <a href="/about">关于我</a>
+        
+    </nav>
+</header>
+
+    <main>
+    <div class="wrap min">
+        <section class="page-title">
+            <h2>sceneManager</h2>
+        </section>
+        <article class="page-content">
+        
+            <blockquote>这篇文章上次修改于 217 天前，可能其部分内容已经发生变化，如有疑问可询问作者。</blockquote>
+        
+            <p>unity 的场景管理思路</p>
+<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><ol>
+<li>加载场景是异步的 很容易出现在加载A场景的时候 同时卸载A场景，或者再次加载B场景等，如何保证结果正确</li>
+<li>场景和场景之间的（Lighting）灯光，（Volume）后处理，（AudioListener）声音等，如何找到？如何管理？</li>
+<li>如何无缝的切换场景，并且优雅的进行的过渡</li>
+</ol>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>问题1 异步的问题 可以通过队列任务的方式来实现，每个任务都必须执行完成在能执行下一个任务，任务之间是独立的</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//场景任务队列</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> Queue&lt;SceneTask&gt; _sceneTaskQueue = <span class="keyword">new</span> Queue&lt;SceneTask&gt;();</span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnCreated</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (_main == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        _main = CoRoutineExecutors.Run(TickSceneTask()); <span class="comment">//开启携程</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> IEnumerator <span class="title">TickSceneTask</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_sceneTaskQueue.Count &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> sceneTask = _sceneTaskQueue.Dequeue();</span><br><span class="line">            <span class="comment">//DoTask</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">yield</span> <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">yield</span> <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>问题2 管理的方式,首先规定 场景的（灯光，声音，后期等）等每个场景之间都是独立的，不存在共享的关系（也不是一定可以自行定义）<br>保存场景的堆栈，默认一定是展示顶层的场景的（灯光，声音，后期等），关闭其他的，并且在每个场景里都绑定XScene组件负责收集需要的场景组件</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//XScene.cs</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> UNITY_EDITOR</span></span><br><span class="line">    <span class="keyword">using</span> UnityEditor;</span><br><span class="line">    [<span class="meta">CustomEditor(typeof(XScene), true)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">XSceneEditor</span> : <span class="title">Editor</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnInspectorGUI</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">base</span>.OnInspectorGUI();</span><br><span class="line">            <span class="keyword">if</span> (GUILayout.Button(<span class="string">&quot;收集&quot;</span>))</span><br><span class="line">            &#123;</span><br><span class="line">                (target <span class="keyword">as</span> XScene).Collect();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> SceneData _sceneData;</span><br><span class="line">    <span class="function"><span class="keyword">internal</span> <span class="keyword">void</span> <span class="title">Collect</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        _sceneData._camera = FindObjectOfType&lt;Camera&gt;();</span><br><span class="line">        _sceneData._lights = <span class="keyword">new</span> List&lt;Light&gt;(FindObjectsOfType&lt;Light&gt;());</span><br><span class="line">        _sceneData._volume = FindObjectOfType&lt;Volume&gt;();</span><br><span class="line">        _sceneData._audioListener = FindObjectOfType&lt;AudioListener&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//SceneManager.cs</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;SceneTask&gt; _sceneMap = <span class="keyword">new</span> List&lt;SceneTask&gt;();</span><br><span class="line">    <span class="comment">//展示LoadSceneMode.Single场景的加载</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> IEnumerator <span class="title">SingleLoadTask</span>(<span class="params">SceneTask sceneTask</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">var</span> asHandle = Addressables.LoadSceneAsync(sceneTask._sceneName, sceneTask._loadSceneMode);</span><br><span class="line">        <span class="keyword">while</span> (!asHandle.IsDone)</span><br><span class="line">        &#123;</span><br><span class="line">            sceneTask._progress = asHandle.PercentComplete;</span><br><span class="line">            <span class="keyword">yield</span> <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//Bind</span></span><br><span class="line">        sceneTask._instance = asHandle.Result;</span><br><span class="line">        sceneTask.Bind();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//stack处理 这里不需要在管理其他堆栈的场景物件，因为Single的加载方式会卸载掉所有</span></span><br><span class="line">        _sceneMap.Clear();</span><br><span class="line">        _sceneMap.Add(sceneTask);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//SceneTask.cs</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Bind</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        _xScene = FindXScene(); <span class="comment">//找到场景里挂的XScene对象</span></span><br><span class="line">        <span class="keyword">if</span> (_xScene == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        _xScene._sceneData.Bind();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>问题3 首先为什么不优雅 因为场景切换场景的时候存在摄像机丢失的问题 在ios上会之间黑屏 在android 不会，可能是内部渲染机制不同<br>解决 在切换场景的时候可以通过，可以通过唯一共享的相机来进行过渡</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Camera _changeMapCamera;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CreateChangeMapCamera</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (_changeMapCamera == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> camera = <span class="keyword">new</span> GameObject(<span class="string">&quot;__MapChangeCamera&quot;</span>).AddComponent&lt;Camera&gt;();</span><br><span class="line">        GameObject.DontDestroyOnLoad(camera);</span><br><span class="line">        camera.enabled = <span class="literal">false</span>;</span><br><span class="line">        _changeMapCamera = camera;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//切换的时候 加上 _changeMapCamera.enable = true</span></span><br></pre></td></tr></table></figure>
+        </article>
+    </div>
+</main>
+
+    <footer>
+    <div class="buttons">
+        <button class="to-top" href="#"></button>
+    </div>
+    <div class="wrap min">
+        <section class="widget">
+            <div class="row">
+                <div class="col-m-4">
+                    <h3 class="title-recent">最新文章：</h3>
+                    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2024/09/06/guidefunction/">guidefunction</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/04/touch/">touch</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/09/02/48.16fixed/">48.16 fixed</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/sceneManager/">sceneManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/30/ugui/">ugui</a></li><li class="post-list-item"><a class="post-list-link" href="/2024/08/22/curveMap/">curveMap</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-date">时光机：</h3>
+                    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">August 2024</a></li></ul>
+                </div>
+                <div class="col-m-4">
+                    <h3 class="title-tags">标签云：</h3>
+                    <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 10px;">渲染</a>
+                </div>
+            </div>
+        </section>
+        <section class="sub-footer">
+            <p>© 2025 <a href="/">我勒博客</a>. All Rights Reserved. Theme By <a href="https://github.com/Dreamer-Paul/Hingle" target="_blank" rel="nofollow">Hingle</a>.</p>
+        </section>
+    </div>
+</footer>
+
+
+<script src="/static/kico.js"></script>
+<script src="/static/hingle.js"></script>
+
+
+<script>var hingle = new Paul_Hingle({"copyright":true,"night":true});</script>
+
+  </body>
+</html>
